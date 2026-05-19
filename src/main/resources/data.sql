@@ -1,10 +1,10 @@
 
 
 -- users テーブルにデータを挿入するクエリ
-INSERT INTO users (id, email, name, password)
+INSERT INTO users ( email, name, password)
 VALUES
-(1, 'tanaka@aaa.com', '田中太郎', 'test123'),
-(2, 'suzuki@aaa.com', '鈴木一郎', 'test456');
+( 'tanaka@aaa.com', '田中太郎', 'test123'),
+( 'suzuki@aaa.com', '鈴木一郎', 'test456');
 
 
 --categories テーブルにデータを挿入するクエリ

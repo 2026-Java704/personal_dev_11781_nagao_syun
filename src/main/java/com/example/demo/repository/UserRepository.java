@@ -9,5 +9,7 @@ import com.example.demo.entity.User;
 public interface UserRepository extends JpaRepository<User, Integer> {
 	List<User> findByNameContaining(String name);
 
+	List<User> findByEmail(String email);
+
 	List<User> findByEmailAndPassword(String email, String password);
 }
