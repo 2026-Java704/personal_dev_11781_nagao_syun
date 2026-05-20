@@ -86,27 +86,14 @@ public class UserController {
 			@RequestParam String email,
 			@RequestParam String password,
 			Model model) {
-		List<String> errorList = new ArrayList<>();
-
-		if (email.length() == 0) {
-			errorList.add("メールアドレスは必須です");
-
+		if (email.length() == 0 || password.length() == 0) {
+			model.addAttribute("message", "メールアドレスとパスワードを入力してください");
+			return "login";
 		}
-		if (password.length() == 0) {
-			errorList.add("パスワードは必須です");
-
-		}
-
 		List<User> userList = userRepository.findByEmailAndPassword(email, password);
 		if (userList == null || userList.size() == 0) {
 			// 存在しなかった場合
-			errorList.add("メールアドレスとパスワードが一致しませんでした");
-
-		}
-		if (errorList.size() > 0) {
-			model.addAttribute("errorList", errorList);
-			model.addAttribute("email", email);
-
+			model.addAttribute("message", "メールアドレスとパスワードが一致しませんでした");
 			return "login";
 		}
 		User user = userList.get(0);
