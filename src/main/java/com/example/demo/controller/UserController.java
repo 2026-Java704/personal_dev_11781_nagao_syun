@@ -51,23 +51,24 @@ public class UserController {
 		}
 		if (email.length() == 0) {
 			errorList.add("メールアドレスは必須です");
-		}
-		// メールアドレス存在チェック
-		List<User> userList = userRepository.findByEmail(email);
-		if (userList != null && userList.size() > 0) {
-			// 登録済みのメールアドレスが存在した場合
-			errorList.add("登録済みのメールアドレスです");
+		} else {
+			// メールアドレス存在チェック
+			List<User> userList = userRepository.findByEmail(email);
+			if (userList != null && userList.size() > 0) {
+				// 登録済みのメールアドレスが存在した場合
+				errorList.add("登録済みのメールアドレスです");
+			}
 		}
 		if (password.length() == 0) {
 			errorList.add("パスワードは必須です");
 		}
-		model.addAttribute("errorList", errorList);
 
 		// エラー発生時はお問い合わせフォームに戻す
 		if (errorList.size() > 0) {
+			model.addAttribute("errorList", errorList);
 			model.addAttribute("name", name);
 			model.addAttribute("email", email);
-			model.addAttribute("password", password);
+
 			return "userForm";
 		}
 
@@ -85,29 +86,36 @@ public class UserController {
 			@RequestParam String email,
 			@RequestParam String password,
 			Model model) {
-		// 名前が空の場合にエラーとする
+		List<String> errorList = new ArrayList<>();
+
 		if (email.length() == 0) {
-			model.addAttribute("message", "メールアドレスを入力してください");
-			return "login";
+			errorList.add("メールアドレスは必須です");
+
 		}
 		if (password.length() == 0) {
-			model.addAttribute("message", "パスワードを入力してください");
-			return "login";
+			errorList.add("パスワードは必須です");
+
 		}
 
 		List<User> userList = userRepository.findByEmailAndPassword(email, password);
 		if (userList == null || userList.size() == 0) {
 			// 存在しなかった場合
-			model.addAttribute("message", "メールアドレスとパスワードが一致しませんでした");
+			errorList.add("メールアドレスとパスワードが一致しませんでした");
+
+		}
+		if (errorList.size() > 0) {
+			model.addAttribute("errorList", errorList);
+			model.addAttribute("email", email);
+
 			return "login";
 		}
 		User user = userList.get(0);
 
 		// セッション管理されたアカウント情報にIDと名前をセット
-		account.setId(user.getId());
 		account.setName(user.getName());
+		account.setId(user.getId());
 
 		// 「/items」へのリダイレクト
-		return "redirect:/userForm";
+		return "redirect:/tasks";
 	}
 }

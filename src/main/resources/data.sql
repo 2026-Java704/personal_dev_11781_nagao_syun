@@ -13,9 +13,9 @@ INSERT INTO categories(name) VALUES('勉強');
 INSERT INTO categories(name) VALUES('その他');
 
 -- tasks テーブルにデータを挿入するクエリ
-INSERT INTO tasks (id,  user_id, category_id,title, closing_date, progress, memo)
+INSERT INTO tasks (  user_id, category_id,title, closing_date, progress, memo)
 VALUES
-(1, 1, 1, '散歩', '2026/5/18', 0, '最低20分散歩する'),
-(2, 2, 2, '勉強', '2026/5/18', 1, '最低20分勉強する');
+( 1, 1, '散歩', '2026/5/18', 0, '最低20分散歩する'),
+( 2, 2, '勉強', '2026/5/18', 1, '最低20分勉強する');
 
 

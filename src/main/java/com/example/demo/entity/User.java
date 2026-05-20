@@ -12,10 +12,8 @@ public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
-
-	private String name;
-
 	private String email;
+	private String name;
 
 	private String password;
 
@@ -23,10 +21,10 @@ public class User {
 
 	}
 
-	public User(String name, String email, String password) {
+	public User(String email, String name, String password) {
 
-		this.name = name;
 		this.email = email;
+		this.name = name;
 		this.password = password;
 	}
 
