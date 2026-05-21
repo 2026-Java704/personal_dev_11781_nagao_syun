@@ -3,7 +3,7 @@
 
 <head>
 	<meta charset="UTF-8">
-	<title>新規タスク作成</title>
+	<title>全タスク</title>
 	<link rel="stylesheet" href="/css/style.css">
 
 </head>
@@ -12,6 +12,11 @@
 	<header th:replace="~{header}"></header>
 	<hr>
 	<nav>
+		<form action="/tasks" method="get">
+			<input type="text" name="title" th:value="${title}" placeholder="名前">
+
+			<button>検索</button>
+		</form>
 		<a href="/tasks">全タスク</a>
 
 		<a th:each="category:${categories}" th:href="@{/tasks(categoryId=${category.id})}" th:text="${category.name}"

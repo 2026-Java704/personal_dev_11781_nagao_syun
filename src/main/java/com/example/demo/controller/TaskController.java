@@ -32,6 +32,7 @@ public class TaskController {
 	@GetMapping("/tasks")
 	public String index(
 			@RequestParam(defaultValue = "") Integer categoryId,
+			@RequestParam(defaultValue = "") String title,
 			Model model) {
 
 		// 全カテゴリー一覧を取得
@@ -40,15 +41,19 @@ public class TaskController {
 
 		// 商品一覧情報の取得
 		List<Task> taskList = null;
-		if (categoryId == null) {
-			taskList = taskRepository.findAll();
-		} else {
-			// itemsテーブルをカテゴリーIDを指定して一覧を取得
+		if (categoryId != null) {
 			taskList = taskRepository.findByCategoryId(categoryId);
+		} else if (title.length() > 0) {
+			taskList = taskRepository.findByTitleContaining(title);
+		} else {
+			taskList = taskRepository.findAll();
 		}
+		model.addAttribute("title", title);
+
 		model.addAttribute("tasks", taskList);
 
 		return "tasks";
+
 	}
 
 	@GetMapping("/tasks/new")
