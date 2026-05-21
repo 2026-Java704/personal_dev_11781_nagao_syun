@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
@@ -32,7 +33,9 @@ public class TaskController {
 	@GetMapping("/tasks")
 	public String index(
 			@RequestParam(defaultValue = "") Integer categoryId,
+			@RequestParam(defaultValue = "") String sort,
 			@RequestParam(defaultValue = "") String title,
+			@RequestParam(defaultValue = "") LocalDate closingdate,
 			Model model) {
 
 		// 全カテゴリー一覧を取得
@@ -40,12 +43,27 @@ public class TaskController {
 		model.addAttribute("categories", categoryList);
 
 		// 商品一覧情報の取得
-		List<Task> taskList = null;
-		if (categoryId != null) {
-			taskList = taskRepository.findByCategoryId(categoryId);
+		List<Task> taskList;
+
+		if (title.length() > 0 && "closingdateAsc".equals(sort)) {
+
+			taskList = taskRepository
+					.findByTitleContainingOrderByClosingdateAsc(title);
+
 		} else if (title.length() > 0) {
+
 			taskList = taskRepository.findByTitleContaining(title);
+
+		} else if ("closingdateAsc".equals(sort)) {
+
+			taskList = taskRepository.findAllByOrderByClosingdateAsc();
+
+		} else if (categoryId != null) {
+
+			taskList = taskRepository.findByCategoryId(categoryId);
+
 		} else {
+
 			taskList = taskRepository.findAll();
 		}
 		model.addAttribute("title", title);
@@ -57,19 +75,38 @@ public class TaskController {
 	}
 
 	@GetMapping("/tasks/new")
-	public String create() {
+	public String create(Model model) {
+		List<Category> categoryList = categoryRepository.findAll();
+		model.addAttribute("categories", categoryList);
 		return "addTasks";
 	}
 
 	@PostMapping("/tasks/add")
 	public String store(@RequestParam(defaultValue = "") Integer categoryId,
 			@RequestParam(defaultValue = "") String title,
-			@RequestParam(defaultValue = "") LocalDate closing_date,
+			@RequestParam(defaultValue = "") LocalDate closingdate,
 			@RequestParam(defaultValue = "") Integer progress,
 			@RequestParam(defaultValue = "") String memo,
 			Model model) {
+		List<String> errorList = new ArrayList<>();
+		if (title.length() == 0) {
+			errorList.add("タイトルは必須です");
+		}
+		if (closingdate == null) {
+			errorList.add("期限は必須です");
+		}
+		// エラー発生時はお問い合わせフォームに戻す
+		if (errorList.size() > 0) {
+			model.addAttribute("errorList", errorList);
+			model.addAttribute("title", title);
+			model.addAttribute("title", closingdate);
+			List<Category> categoryList = categoryRepository.findAll();
+			model.addAttribute("categories", categoryList);
+			return "addTasks";
+		}
+
 		Category category = categoryRepository.findById(categoryId).get();
-		Task task = new Task(account.getId(), category, title, closing_date, progress, memo);
+		Task task = new Task(account.getId(), category, title, closingdate, progress, memo);
 		// itemsテーブルへの反映（INSERT）
 		taskRepository.save(task);
 		// 「/items」にGETでリクエストし直す（リダイレクト）
@@ -83,6 +120,8 @@ public class TaskController {
 		// itemsテーブルをID（主キー）で検索
 		Task task = taskRepository.findById(id).get();
 		model.addAttribute("task", task);
+		List<Category> categoryList = categoryRepository.findAll();
+		model.addAttribute("categories", categoryList);
 		return "editTasks";
 	}
 
@@ -92,6 +131,7 @@ public class TaskController {
 			@PathVariable Integer id,
 			@RequestParam(defaultValue = "") Integer categoryId,
 			@RequestParam(defaultValue = "") String title,
+			@RequestParam(defaultValue = "") LocalDate closingdate,
 			@RequestParam(defaultValue = "") Integer progress,
 			@RequestParam(defaultValue = "") String memo,
 			Model model) {
@@ -102,6 +142,7 @@ public class TaskController {
 
 		task.setCategory(category);
 		task.setTitle(title);
+		task.setClosingdate(closingdate);
 		task.setProgress(progress);
 		task.setMemo(memo);
 
@@ -116,6 +157,25 @@ public class TaskController {
 
 		// itemsテーブルから削除（DELETE）
 		taskRepository.deleteById(id);
+		// 「/items」にGETでリクエストし直す（リダイレクト）
+		return "redirect:/tasks";
+	}
+
+	@GetMapping("/categories/add")
+	public String create1() {
+		return "addcategory";
+	}
+
+	@PostMapping("categories/add")
+	public String store(
+
+			@RequestParam(defaultValue = "") Integer categoryId,
+			@RequestParam(defaultValue = "") String categoryName) {
+
+		// Itemオブジェクトの生成
+		Category category = new Category(categoryId, categoryName);
+		// itemsテーブルへの反映（INSERT）
+		categoryRepository.save(category);
 		// 「/items」にGETでリクエストし直す（リダイレクト）
 		return "redirect:/tasks";
 	}

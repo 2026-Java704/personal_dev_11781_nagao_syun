@@ -10,19 +10,30 @@
 
 <body>
 	<header th:replace="~{header}"></header>
+	<a href="/tasks/new">新規タスク作成</a>
+	<a href="/categories/add">新規カテゴリー登録</a>
 	<hr>
 	<nav>
 		<form action="/tasks" method="get">
-			<input type="text" name="title" th:value="${title}" placeholder="名前">
+			<input type="hidden" name="closingdate">
+			<input type="text" name="title" th:value="${title}" placeholder="タイトル">
 
 			<button>検索</button>
 		</form>
+
+
+
 		<a href="/tasks">全タスク</a>
 
 		<a th:each="category:${categories}" th:href="@{/tasks(categoryId=${category.id})}" th:text="${category.name}"
 			style="margin-right: 5px;"></a>
 		<br>
-		<a href="/tasks/new">新規タスク作成</a>
+	
+		<br>
+		<a th:href="@{/tasks(sort='closingdateAsc', title=${title})}">
+			期限が近い順
+		</a>
+		
 
 	</nav>
 	<main>
@@ -40,7 +51,7 @@
 				<td th:text="${task.id}"></td>
 				<td th:text="${task.title}"></td>
 				<td th:text="${task.category.name}"></td>
-				<td th:text="${task.closing_date}"></td>
+				<td th:text="${task.closingdate}"></td>
 				<td th:if="${task.progress==0}">未着手 </td>
 				<td th:if="${task.progress==1}">進行中 </td>
 				<td th:if="${task.progress==2}">完了 </td>
@@ -51,7 +62,8 @@
 					</form>
 				</td>
 				<td>
-					<form th:action="@{/tasks/{taskId}/delete(taskId=${task.id})}" method="post">
+					<form th:action="@{/tasks/{taskId}/delete(taskId=${task.id})}" method="post"
+						onclick="return confirm('本当にタスクを削除してもよろしいですか？');">
 						<button>削除</button>
 					</form>
 				</td>

@@ -11,4 +11,8 @@ public interface TaskRepository extends JpaRepository<Task, Integer> {
 
 	List<Task> findByTitleContaining(String title);
 
+	List<Task> findByTitleContainingOrderByClosingdateAsc(String title);
+
+	List<Task> findAllByOrderByClosingdateAsc();
+
 }

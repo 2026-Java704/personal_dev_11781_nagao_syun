@@ -8,17 +8,19 @@
 </head>
 
 <body>
-	<h1>新規タスク作成</h1>
 
+	<h1>新規タスク作成</h1>
+	<div th:each="error:${errorList}">
+		<span th:text="${error}" style="color: red"></span>
+	</div>
 	<form action="/tasks/add" method="post">
 		<table border="1">
 			<tr>
 				<th>カテゴリー</th>
 
 				<td><select name="categoryId">
-						<option value="1">運動</option>
-						<option value="2">勉強</option>
-						<option value="3">その他</option>
+						<option th:each="category:${categories}" th:value="${category.id}">[[${category.name}]]</option>
+
 				</td> </select><br>
 
 
@@ -27,13 +29,13 @@
 			<tr>
 				<th>タイトル</th>
 				<td>
-					<input type="text" name="title"  >
+					<input type="text" name="title" th:value="${title}" >
 				</td>
 			</tr>
 			<tr>
 				<th>期限</th>
 				<td>
-					<input type="date" name="closing_date">
+					<input type="date" name="closingdate"  >
 				</td>
 			</tr>
 			<tr>
@@ -48,7 +50,7 @@
 			<tr>
 				<th>メモ</th>
 				<td>
-					<input type="text" name="memo">
+					<textarea name="memo"></textarea>
 				</td>
 			</tr>
 		</table>
