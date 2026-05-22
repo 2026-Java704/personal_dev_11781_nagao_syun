@@ -9,10 +9,14 @@ import com.example.demo.entity.Task;
 public interface TaskRepository extends JpaRepository<Task, Integer> {
 	List<Task> findByCategoryId(Integer categoryId);
 
-	List<Task> findByTitleContaining(String title);
+	List<Task> findByUserIdAndTitleContaining(Integer userId, String title);
 
-	List<Task> findByTitleContainingOrderByClosingdateAsc(String title);
+	List<Task> findByUserIdAndTitleContainingOrderByClosingdateAsc(Integer userId, String title);
 
-	List<Task> findAllByOrderByClosingdateAsc();
+	List<Task> findByUserIdOrderByClosingdateAsc(Integer userId);
+
+	List<Task> findByUserId(Integer userId);
+
+	List<Task> findByUserIdAndCategoryId(Integer userId, Integer categoryId);
 
 }

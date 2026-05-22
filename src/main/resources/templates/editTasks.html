@@ -16,7 +16,7 @@
 				<th>カテゴリー</th>
 
 				<td><select name="categoryId">
-						<option th:each="category:${categories}" th:value="${category.id}">[[${category.name}]]</option>
+						<option th:each="category:${categories}" th:value="${category.id}" th:text="${category.name}" th:selected="${category.id == task.category.id}"></option>
 
 				</td> </select><br>
 
@@ -52,7 +52,9 @@
 			</tr>
 
 		</table>
+		<div class="button-container">
 		<button>更新</button>
+		</div>
 	</form>
 </body>
 

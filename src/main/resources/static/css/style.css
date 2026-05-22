@@ -1,61 +1,169 @@
 /* 全体 */
 body {
-	background-color: #EFF0F7; /* 背景色  */
-	text-align: center; /* 中央寄せ */
-    min-width: 900px; /* 最小幅 */
+	background-color: #e9e9e9;
+	margin: 0;
+	font-family: "Yu Gothic", sans-serif;
+	color: #333;
 }
-/* ヘッダー、ナビゲーションメニュー、フッター */
-header, nav, footer {
-	background-color: #45496a; /* 背景色 */
-	color: #ffffff; /* 文字色 */
-	padding-top: 5px; /* 内側余白(上) */
-	padding-bottom: 5px; /* 内側余白(下) */
+
+/* コンテナ */
+.container {
+	width: 1000px;
+	margin: 30px auto;
+	background-color: white;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+	border: 1px solid #cfcfcf;
 }
-/* ヘッダー、ナビゲーション内リンク */
-header a, nav a {
-	color: #ffffff;
+
+/* ヘッダー */
+header {
+	background-color: #555;
+	color: white;
+	padding: 30px;
 }
-/* ヘッダー内見出し */
+
+/* タイトル */
 header h1 {
-	font-size: 20pt;
-	margin: 10px auto;
+	margin: 0;
+	font-size: 42px;
 }
-/* 仕切り線 */
-hr {
-	border-top: 2px dashed #7d8bae;
+
+/* ユーザー情報 */
+.user-info {
+	text-align: right;
+	margin-top: 10px;
 }
+
+/* ナビゲーション */
+nav {
+	background-color: #6a6a6a;
+	padding: 10px 20px;
+	text-align: left;
+}
+
+nav a {
+	color: white;
+	text-decoration: none;
+	margin-right: 20px;
+	font-weight: bold;
+}
+
+nav a:hover {
+	text-decoration: underline;
+}
+
 /* メイン */
 main {
-	background-color: #FFFFFF;
-	min-height: 50px;
-	padding: 20px;
+	padding: 40px;
+	min-height: 500px;
 }
-/* 表線 */
-table, th, td {
-	border-collapse: collapse;
-	border: 1px solid #7d8bae;
+
+/* リンクエリア */
+.link-area {
+	margin-bottom: 20px;
 }
+
+.link-area a {
+	margin-right: 20px;
+	font-weight: bold;
+	color: #444;
+	text-decoration: none;
+}
+
+.link-area a:hover {
+	color: #000;
+	text-decoration: underline;
+}
+
+/* 検索フォーム */
+.search-area {
+	margin-bottom: 20px;
+}
+
+.search-area input[type="text"] {
+	padding: 8px;
+	width: 250px;
+	border: 1px solid #aaa;
+}
+
 /* 表 */
 table {
-    margin: 5px auto;
-    min-width: 800px;
+	width: 100%;
+	border-collapse: collapse;
 }
-/* 表見出しセル */
+
+/* 表ヘッダー */
 table th {
-	background: #7d8bae;
-	color: #ffffff;
+	background-color: #666;
+	color: white;
+	padding: 12px;
 }
-/* 送信ボタン */
+
+/* 表データ */
+table td {
+	padding: 10px;
+	border: 1px solid #ccc;
+}
+
+/* 偶数行 */
+table tr:nth-child(even) {
+	background-color: #f7f7f7;
+}
+.button-container {
+  display: flex;
+  justify-content: center;
+  /* 必要に応じて上下の余白や幅を指定 */
+  padding: 20px 0; 
+}
+
+/* ボタン共通 */
 button {
-	margin: 2px;
-	padding: 5px 20px;
-	background-color: #e5857b;
-	color: #ffffff;
+	padding: 8px 18px;
 	border: none;
-	width:150px;
+	color: white;
 	cursor: pointer;
+	font-weight: bold;
+	background-color: #3b82f6;
+	
+	/* ボタンが見えるように色を追加しています */
 }
-/* 送信ボタン(マウスオーバー時) */
-button:hover {
-	background-color: #f1b2b2;
+
+/* 更新ボタン */
+.update-btn {
+	background-color: #5c6bc0;
+	
+	
+}
+
+/* 削除ボタン */
+.delete-btn {
+	background-color: #d9534f;
+}
+
+/* hover */
+
+
+/* フッター */
+footer {
+	background-color: #555;
+	color: white;
+	text-align: center;
+	padding: 15px;
+}
+
+/* エラー */
+ul.error {
+	color: red;
+	list-style: none;
+}
+.expired {
+    background-color: #ffb3b3;
+}
+
+/* 期限が近い */
+.near-deadline {
+    background-color: #fff3b0;
+}
+.danger {
+    background-color: #ffaaaa;
 }

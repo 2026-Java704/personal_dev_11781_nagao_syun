@@ -85,9 +85,14 @@ public class UserController {
 	public String login(
 			@RequestParam String email,
 			@RequestParam String password,
+			@RequestParam String checkpassword,
 			Model model) {
 		if (email.length() == 0 || password.length() == 0) {
 			model.addAttribute("message", "メールアドレスとパスワードを入力してください");
+			return "login";
+		}
+		if (!password.equals(checkpassword)) {
+			model.addAttribute("message", "パスワードが一致しません");
 			return "login";
 		}
 		List<User> userList = userRepository.findByEmailAndPassword(email, password);

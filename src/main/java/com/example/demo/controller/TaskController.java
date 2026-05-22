@@ -37,6 +37,10 @@ public class TaskController {
 			@RequestParam(defaultValue = "") String title,
 			@RequestParam(defaultValue = "") LocalDate closingdate,
 			Model model) {
+		if (account.getId() == null) {
+			return "redirect:/login";
+		}
+		model.addAttribute("today", LocalDate.now());
 
 		// 全カテゴリー一覧を取得
 		List<Category> categoryList = categoryRepository.findAll();
@@ -48,23 +52,23 @@ public class TaskController {
 		if (title.length() > 0 && "closingdateAsc".equals(sort)) {
 
 			taskList = taskRepository
-					.findByTitleContainingOrderByClosingdateAsc(title);
+					.findByUserIdAndTitleContainingOrderByClosingdateAsc(account.getId(), title);
 
 		} else if (title.length() > 0) {
 
-			taskList = taskRepository.findByTitleContaining(title);
+			taskList = taskRepository.findByUserIdAndTitleContaining(account.getId(), title);
 
 		} else if ("closingdateAsc".equals(sort)) {
 
-			taskList = taskRepository.findAllByOrderByClosingdateAsc();
+			taskList = taskRepository.findByUserIdOrderByClosingdateAsc(account.getId());
 
 		} else if (categoryId != null) {
 
-			taskList = taskRepository.findByCategoryId(categoryId);
+			taskList = taskRepository.findByUserIdAndCategoryId(account.getId(), categoryId);
 
 		} else {
 
-			taskList = taskRepository.findAll();
+			taskList = taskRepository.findByUserId(account.getId());
 		}
 		model.addAttribute("title", title);
 
@@ -75,7 +79,11 @@ public class TaskController {
 	}
 
 	@GetMapping("/tasks/new")
+
 	public String create(Model model) {
+		if (account.getId() == null) {
+			return "redirect:/login";
+		}
 		List<Category> categoryList = categoryRepository.findAll();
 		model.addAttribute("categories", categoryList);
 		return "addTasks";
@@ -88,6 +96,9 @@ public class TaskController {
 			@RequestParam(defaultValue = "") Integer progress,
 			@RequestParam(defaultValue = "") String memo,
 			Model model) {
+		if (account.getId() == null) {
+			return "redirect:/login";
+		}
 		List<String> errorList = new ArrayList<>();
 		if (title.length() == 0) {
 			errorList.add("タイトルは必須です");
@@ -107,8 +118,10 @@ public class TaskController {
 
 		Category category = categoryRepository.findById(categoryId).get();
 		Task task = new Task(account.getId(), category, title, closingdate, progress, memo);
+
 		// itemsテーブルへの反映（INSERT）
 		taskRepository.save(task);
+		task.setUserId(account.getId());
 		// 「/items」にGETでリクエストし直す（リダイレクト）
 		return "redirect:/tasks";
 	}
@@ -116,6 +129,9 @@ public class TaskController {
 	// 更新画面表示
 	@GetMapping("/tasks/{id}/edit")
 	public String edit(@PathVariable Integer id, Model model) {
+		if (account.getId() == null) {
+			return "redirect:/login";
+		}
 
 		// itemsテーブルをID（主キー）で検索
 		Task task = taskRepository.findById(id).get();
@@ -135,10 +151,20 @@ public class TaskController {
 			@RequestParam(defaultValue = "") Integer progress,
 			@RequestParam(defaultValue = "") String memo,
 			Model model) {
+		if (account.getId() == null) {
+			return "redirect:/login";
+		}
 
 		// Itemオブジェクトの生成
 		Category category = categoryRepository.findById(categoryId).get();
 		Task task = taskRepository.findById(id).get();
+		if (categoryId == null) {
+			return "addTask";
+		}
+
+		if (!task.getUserId().equals(account.getId())) {
+			return "redirect:/tasks";
+		}
 
 		task.setCategory(category);
 		task.setTitle(title);
@@ -154,9 +180,17 @@ public class TaskController {
 
 	@PostMapping("/tasks/{id}/delete")
 	public String delete(@PathVariable Integer id) {
+		if (account.getId() == null) {
+			return "redirect:/login";
+		}
 
 		// itemsテーブルから削除（DELETE）
+		Task task = taskRepository.findById(id).get();
 		taskRepository.deleteById(id);
+		if (!task.getUserId().equals(account.getId())) {
+			return "redirect:/tasks";
+		}
+
 		// 「/items」にGETでリクエストし直す（リダイレクト）
 		return "redirect:/tasks";
 	}
@@ -171,6 +205,9 @@ public class TaskController {
 
 			@RequestParam(defaultValue = "") Integer categoryId,
 			@RequestParam(defaultValue = "") String categoryName) {
+		if (account.getId() == null) {
+			return "redirect:/login";
+		}
 
 		// Itemオブジェクトの生成
 		Category category = new Category(categoryId, categoryName);

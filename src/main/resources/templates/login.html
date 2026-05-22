@@ -18,6 +18,7 @@
 		<form action="/login" method="post">
 			<input type="text" name="email" th:value="${email}" placeholder="メールアドレス"><br>
 			<input type="password" name="password" placeholder="パスワード"><br>
+			<input type="password" name="checkpassword" placeholder="パスワード確認"><br>
 
 			<button>ログイン</button>
 			<br> <span th:text="${message}" style="color: red"></span>

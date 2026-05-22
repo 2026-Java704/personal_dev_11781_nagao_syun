@@ -1,5 +1,8 @@
 <header>
 	<h1><a href="/tasks">タスク一覧</a></h1>
+	<div class="user-info ">
 	[[${@account.name}]]さんがログイン中
-	<a href="/logout">ログアウト</a>
+	<a href="/logout" onclick="return confirm('本当にログアウトしますか？');">ログアウト</a>
+
+	</div>
 </header>
