@@ -26,6 +26,7 @@ header {
 header h1 {
 	margin: 0;
 	font-size: 42px;
+	text-align: center;
 }
 
 /* ユーザー情報 */
@@ -123,14 +124,14 @@ button {
 	color: white;
 	cursor: pointer;
 	font-weight: bold;
-	background-color: #3b82f6;
+	background-color: rgb(0, 128, 192);
 	
 	/* ボタンが見えるように色を追加しています */
 }
 
 /* 更新ボタン */
 .update-btn {
-	background-color: #5c6bc0;
+	background-color: rgb(0, 128, 192);
 	
 	
 }
@@ -160,10 +161,19 @@ ul.error {
     background-color: #ffb3b3;
 }
 
-/* 期限が近い */
-.near-deadline {
-    background-color: #fff3b0;
+
+.login-container {			
+	width: 500px;		
+	margin: 30px auto;		
+	background-color: #ffffff;	
+	padding: 40px;	
+	box-shadow: 0 0 10px rgba(0,0,0,0.2);		
+	text-align: center;
+	padding-bottom: 20px;		
+}			
+.danger{
+	background-color:rgb(255, 0, 0);
 }
-.danger {
-    background-color: #ffaaaa;
+.warning{
+background-color:#fff099;
 }

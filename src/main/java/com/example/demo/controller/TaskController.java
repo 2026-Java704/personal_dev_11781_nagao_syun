@@ -32,15 +32,16 @@ public class TaskController {
 
 	@GetMapping("/tasks")
 	public String index(
-			@RequestParam(defaultValue = "") Integer categoryId,
+			@RequestParam(required = false) Integer categoryId,
 			@RequestParam(defaultValue = "") String sort,
 			@RequestParam(defaultValue = "") String title,
-			@RequestParam(defaultValue = "") LocalDate closingdate,
+			@RequestParam(defaultValue = "") Integer progress,
+			@RequestParam(required = false) LocalDate closingdate,
+
 			Model model) {
 		if (account.getId() == null) {
 			return "redirect:/login";
 		}
-		model.addAttribute("today", LocalDate.now());
 
 		// 全カテゴリー一覧を取得
 		List<Category> categoryList = categoryRepository.findAll();
@@ -66,12 +67,21 @@ public class TaskController {
 
 			taskList = taskRepository.findByUserIdAndCategoryId(account.getId(), categoryId);
 
-		} else {
+		} else if (progress != null) {
+			taskList = taskRepository.findByUserIdAndProgress(account.getId(), progress);
 
+		} else {
 			taskList = taskRepository.findByUserId(account.getId());
 		}
-		model.addAttribute("title", title);
 
+		LocalDate nearestDate = taskList.stream()
+				.map(Task::getClosingdate)
+				.filter(date -> date != null)
+				.filter(date -> !date.isBefore(LocalDate.now()))
+				.min(LocalDate::compareTo)
+				.orElse(null);
+		model.addAttribute("title", title);
+		model.addAttribute("nearestDate", nearestDate);
 		model.addAttribute("tasks", taskList);
 
 		return "tasks";
@@ -106,11 +116,14 @@ public class TaskController {
 		if (closingdate == null) {
 			errorList.add("期限は必須です");
 		}
+		if (progress != null && progress == 2) {
+			errorList.add("完了状態のタスクは新規登録できません");
+		}
 		// エラー発生時はお問い合わせフォームに戻す
 		if (errorList.size() > 0) {
 			model.addAttribute("errorList", errorList);
 			model.addAttribute("title", title);
-			model.addAttribute("title", closingdate);
+			model.addAttribute("closingdate", closingdate);
 			List<Category> categoryList = categoryRepository.findAll();
 			model.addAttribute("categories", categoryList);
 			return "addTasks";
@@ -186,10 +199,10 @@ public class TaskController {
 
 		// itemsテーブルから削除（DELETE）
 		Task task = taskRepository.findById(id).get();
-		taskRepository.deleteById(id);
 		if (!task.getUserId().equals(account.getId())) {
 			return "redirect:/tasks";
 		}
+		taskRepository.deleteById(id);
 
 		// 「/items」にGETでリクエストし直す（リダイレクト）
 		return "redirect:/tasks";
@@ -215,6 +228,23 @@ public class TaskController {
 		categoryRepository.save(category);
 		// 「/items」にGETでリクエストし直す（リダイレクト）
 		return "redirect:/tasks";
+	}
+
+	@PostMapping("/{id}/edit")
+	public String update(
+			@PathVariable Integer id,
+			@RequestParam(defaultValue = "") String name,
+			Model model) {
+
+		// テーブルをID（主キー）で検索
+		Category category = categoryRepository.findById(id).get();
+
+		// セッターを利用して、categoryオブジェクトのフィールドを書き換える
+		category.setName(name);
+
+		// itemsテーブルへの反映（UPDATE）
+		categoryRepository.save(category);
+		return "redirect:/categories";
 	}
 
 }
