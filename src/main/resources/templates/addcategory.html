@@ -9,22 +9,24 @@
 
 <body>
 	<header>
-	<h1>カテゴリ登録</h1>
+		<h1>分類登録</h1>
 	</header>
 
 	<form action="/categories/add" method="post">
 		<table border="1">
 
 			<tr>
-				<th>カテゴリ名</th>
+				<th>分類</th>
 				<td>
-					<input type="text" name="categoryName">
+					<input type="text" name="name">
 				</td>
 			</tr>
 
 		</table>
 		<div class="button-container">
-		<button>登録</button>
+			<button style="margin-right: 10px;">登録</button>
+			<button type="button" onclick="history.back()">前のページへ戻る</button>
+
 		</div>
 	</form>
 </body>

@@ -8,15 +8,17 @@
 </head>
 
 <body>
-	<h1>タスク変更</h1>
-
+	<header>
+		<h1>タスク変更</h1>
+	</header>
 	<form th:action="@{/tasks/{taskId}/edit(taskId=${task.id})}" method="post">
 		<table border="1">
 			<tr>
-				<th>カテゴリー</th>
+				<th>分類</th>
 
 				<td><select name="categoryId">
-						<option th:each="category:${categories}" th:value="${category.id}" th:text="${category.name}" th:selected="${category.id == task.category.id}"></option>
+						<option th:each="category:${categories}" th:value="${category.id}" th:text="${category.name}"
+							th:selected="${category.id == task.category.id}"></option>
 
 				</td> </select><br>
 
@@ -24,13 +26,13 @@
 
 			</tr>
 			<tr>
-				<th>タイトル</th>
+				<th>タスク</th>
 				<td>
 					<input type="text" name="title" th:value="${task.title}">
 				</td>
 			</tr>
 			<tr>
-				<th>期限</th>
+				<th>期限日</th>
 				<td>
 					<input type="date" name="closingdate" th:value="${task.closingdate}">
 				</td>
@@ -45,7 +47,7 @@
 			</tr>
 
 			<tr>
-				<th>メモ</th>
+				<th>詳細・備考</th>
 				<td>
 					<textarea name="memo" th:value="${memo}"></textarea>
 				</td>
@@ -53,7 +55,8 @@
 
 		</table>
 		<div class="button-container">
-		<button>更新</button>
+			<button style="margin-right: 10px;">更新</button>
+			<button type="button" onclick="history.back()">前のページへ戻る</button>
 		</div>
 	</form>
 </body>

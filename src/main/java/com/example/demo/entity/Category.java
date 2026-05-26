@@ -1,5 +1,6 @@
 package com.example.demo.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -12,16 +13,17 @@ public class Category {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id; // カテゴリーID
-
+	@Column(name = "user_id")
+	private Integer userId;
 	private String name; // カテゴリー名
 
 	public Category() {
 
 	}
 
-	public Category(Integer id, String name) {
+	public Category(Integer userId, String name) {
 
-		this.id = id;
+		this.userId = userId;
 		this.name = name;
 	}
 
@@ -40,6 +42,14 @@ public class Category {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public Integer getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Integer userId) {
+		this.userId = userId;
 	}
 
 }

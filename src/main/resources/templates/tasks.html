@@ -15,17 +15,18 @@
 		<hr>
 		<nav>
 
-			<a href="/tasks">全タスク</a>
-			<a th:each="category:${categories}" th:href="@{/tasks(categoryId=${category.id})}"
-				th:text="${category.name}" style="margin-right: 5px;"></a>
-
+			<a href="/tasks">タスク一覧</a>
+			<h4>分類:
+				<a th:each="category:${categories}" th:href="@{/tasks(categoryId=${category.id})}"
+					th:text="${category.name}" style="margin-right: 5px;"></a>
+			</h4>
 		</nav>
 		<main>
 			<div class="link-area">
-				<a href="/tasks/new">新規タスク作成</a>
-				<a href="/categories/add">新規カテゴリー登録</a>
+				<a href="/tasks/new">タスク作成</a>
+				<a href="/categories/add">分類登録</a>
 				<a th:href="@{/tasks(sort='closingdateAsc', title=${title})}">
-					期限が近い順
+					期限日が近い順
 				</a>
 
 			</div>
@@ -34,7 +35,7 @@
 			<form action="/tasks" method="get">
 				<div class="search-area">
 					<input type="hidden" name="closingdate">
-					<input type="text" name="title" th:value="${title}" placeholder="タイトル">
+					<input type="text" name="title" th:value="${title}" placeholder="タスク名">
 
 					<button>検索</button>
 				</div>
@@ -42,13 +43,13 @@
 			<form action="/tasks" method="get">
 				<div class="search-area">
 					<h4>進歩状況:
-					<select name="progress">
-						<option value="0">未着手</option>
-						<option value="1">進行中</option>
-						<option value="2">完了</option>
-					</select>
-					
-					<button>検索</button>
+						<select name="progress">
+							<option value="0">未着手</option>
+							<option value="1">進行中</option>
+							<option value="2">完了</option>
+						</select>
+
+						<button>検索</button>
 					</h4>
 				</div>
 			</form>
@@ -57,25 +58,24 @@
 
 
 
-			
+
 
 
 
 
 			<table border="1" th:if="${tasks.size()>0}">
 				<tr>
-					<th>NO</th>
-					<th>タイトル</th>
-					<th>カテゴリー</th>
-					<th>期限</th>
+
+					<th>タスク名</th>
+					<th>分類</th>
+					<th>期限日</th>
 					<th>進歩状況</th>
-					<th>メモ</th>
-					<th>更新</th>
+					<th>詳細・備考</th>
+					<th>編集</th>
 					<th>削除</th>
 
 				</tr>
 				<tr th:each="task:${tasks}">
-					<td th:text="${task.id}"></td>
 					<td th:text="${task.title}"></td>
 					<td th:text="${task.category.name}"></td>
 					<td th:text="${task.closingdate}" th:classappend="
